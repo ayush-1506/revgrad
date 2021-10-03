@@ -15,11 +15,11 @@ class value{
         float data;
         float grad;
         std::function<void()> backwardfunc;
-        std::set<value*> children;
+        std::set<value> children;
 
         value(float);
 
-        value(float, std::set<value*>);
+        value(float, std::set<value>);
 
         //getters
 
@@ -42,9 +42,11 @@ class value{
         //   float other_float = static_cast <float>(other);
         //    return (*this) + value(other_float);
         //}
-        value* operator+(value*);
+        value operator+(value);
 
-        value* operator*(value*);
+        value operator*(value);
+
+        friend bool operator< (const value &left, const value &right);
 
         void backward();
 
