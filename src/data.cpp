@@ -5,145 +5,113 @@
 #include <functional>
 #include <algorithm>
 
-class value{
-    public:
-        float data;
-        float grad;
-        std::function<void()> backwardfunc;
-        std::set<value*> children;
+#include "data.hpp"
 
-        class toposort{
-            public:
-                value* startnode;
-                std::set<value*> visited;
-                std::vector<value*> sorted_result;
+value::value(float data){
+    this->data = data;
+    this->grad = 0.0;
+    std::function<void()> backward_ = []() mutable {}; // dummy backward function
+    this -> backwardfunc = backward_;
+}
 
-                toposort(value* startnode){
-                    this -> startnode = startnode;
-                }
+value::value(const float data, const std::set<value*> children){
+    this->data = data;
+    this->children = children;
+    this->grad =  0;
+    std::function<void()> backward_ = []() mutable {}; // dummy backward function
+    this->backwardfunc = backward_;
+}
 
-                void topological_sort(value* curnode){
-                    for (auto n: this->sorted_result){
-                        std::cout << n->data << std::endl;
-                    }
-                    for (auto& child: curnode->children){
-                        bool ispresent = this->visited.find(child) != this->visited.end();
-                        if (!ispresent){
-                            this->visited.insert(child);
-                            this->topological_sort(child);
-                        }
-                    }
-                    this->sorted_result.push_back(curnode);
-                }
+//getters
 
-                //getters
-                std::vector<value*> get_topoligical_sort(value* startnode){
-                    this->topological_sort(startnode);
-                    std::reverse(this->sorted_result.begin(), this->sorted_result.end());
-                    return this->sorted_result;
-                }
-        };
+float value::getdata(){
+    return this->data;
+}
 
-        value(float data){
-            this->data = data;
-            this->grad = 0.0;
-        }
+float value::getgrad(){
+    return this->grad;
+}
 
-        value(float data, std::set<value*> children){
-            this->data = data;
-            this->children = children;
-            this ->grad =  0;
-        }
+//setters
 
-        //getters
+void value::setbackward(std::function<void()> func){
+    this->backwardfunc = func;
+}
 
-        float getdata(){
-            return this->data;
-        }
+void value::setgrad(float newgrad){
+    this->grad = newgrad;
+}
 
-        float getgrad(){
-            return this->grad;
-        }
+// overload plus operator
+//value operator + (float other){
+//    return (*this) + value(other);
+//}
 
-        //setters
+//value operator + (int other) {
+//   float other_float = static_cast <float>(other);
+//    return (*this) + value(other_float);
+//}
+value* value::operator+(value* other){
+    float new_data = this->data + other->data;
+    std::set<value*> newchildren;
+    newchildren.insert(this);
+    newchildren.insert(other);
+    value* out = new value(new_data, newchildren);
 
-        void setbackward(std::function<void()> func){
-            this->backwardfunc = func;
-        }
+    std::function<void()> newbackward = [this, out, other]() mutable {
+        this->grad = this->grad + out->grad;
+        std::cout << "setting grad " << other->grad + out->grad << std::endl;
+        other->setgrad(other->grad+out->grad);
+        std::cout << "grad set" << std::endl;
+    };
 
-        void setgrad(float newgrad){
-            this->grad = newgrad;
-        }
+    out->setbackward(newbackward);
+    return out;
+}
 
-        // overload plus operator
-        //value operator + (float other){
-        //    return (*this) + value(other);
-        //}
+value* value::operator*(value* other){
+    float new_data = this->data * other->data;
+    std::set<value*> newchildren;
+    newchildren.insert(this);
+    newchildren.insert(other);
+    value* out = new value(new_data, newchildren);
 
-        //value operator + (int other) {
-        //   float other_float = static_cast <float>(other);
-        //    return (*this) + value(other_float);
-        //}
-        value* operator+(value* other){
-            float new_data = this->data + other->data;
-            std::set<value*> newchildren;
-            newchildren.insert(this);
-            newchildren.insert(other);
-            value* out = new value(new_data, newchildren);
+    std::function<void()> newbackward = [this, out, other]() mutable {
+        this->grad = this->grad + other->data*out->grad;
+        other->setgrad(other->grad+ this->data*out->grad);
+    };
 
-            std::function<void()> newbackward = [this, out, other]() mutable {
-                this->grad = this->grad + out->grad;
-                std::cout << "setting grad " << other->grad + out->grad << std::endl;
-                other->setgrad(other->grad+out->grad);
-                std::cout << "grad set" << std::endl;
-            };
+    out->setbackward(newbackward);
+    return out;
 
-            out->setbackward(newbackward);
-            return out;
-        }
+}
 
-        void backward(){
-            std::set<value*> visited;
-            toposort* topo = new toposort(this);
-            //do topo sort here
-            std::vector<value*> topo_result = topo->get_topoligical_sort(this);
-            std::cout << "topo sort result: " << std::endl;
-            for (auto n:topo_result){
-                std::cout << n->data << std::endl;
-            }
-            this->grad = 1;
-            for (auto& node: topo_result){
-                std::cout << "setting grad for " << node->data << std::endl;
-                node->backwardfunc();
-            }
-        }
+void value::backward(){
+    std::cout << "goind back" << std::endl;
+    std::set<value*> visited;
 
-        void show(){
-            std::cout << "Data : " << this->data << std::endl;
-            std::cout << "Grad : " << this->grad << std::endl;
-            std::cout << "Children : " << std::endl;
-            for (auto n: this->children){
-                std::cout << n->data << std::endl;
-            }
-            std::cout << "-----" << std::endl;
-        }
-};
-
-
-
-int main(){
-    value v1(5.0);
-    value* v2 = new value(10.0);
-    value* v = v1 + v2;
-    //std::cout << v->data << std::endl;
-    //std::cout << v->grad << std::endl;
-    v1.show();
-    v2->show();
-    v->show();
-    v->backward();
+    toposort<value>* topo = new toposort<value>(this);
+    topo -> printrandomstuff(100);
+    //do topo sort here
+    std::vector<value*> topo_result = topo->get_topological_sort(this);
     
-    v->show();
-    v1.show();
-    v2->show();
-    //std::cout << (v1+v2).grad;
+    std::cout << "topo sort result: " << std::endl;
+    for (auto n:topo_result){
+        std::cout << n->data << std::endl;
+    }
+    this->grad = 1;
+    for (auto& node: topo_result){
+        std::cout << "setting grad for " << node->data << std::endl;
+        node->backwardfunc();
+    }
+}
+
+void value::show(){
+    std::cout << "Data : " << this->data << std::endl;
+    std::cout << "Grad : " << this->grad << std::endl;
+    std::cout << "Children : " << std::endl;
+    for (auto n: this->children){
+        std::cout << n->data << std::endl;
+    }
+    std::cout << "-----" << std::endl;
 }

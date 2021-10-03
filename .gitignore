@@ -53,3 +53,6 @@ idkms.conf
 
 # vscode
 .vscode
+
+# bazel
+bazel*
