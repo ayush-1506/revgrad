@@ -6,6 +6,7 @@
 #include <algorithm>
 
 #include "data.hpp"
+#include "sort.hpp"
 
 value::value(float data){
     this->data = data;
