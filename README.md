@@ -1,6 +1,10 @@
 # revgrad
 Reverse mode AD on DAGs
 
+# Usage
+
+1. bazel build //src:main
+
 # steps:
 
 [] Figure out design of single `Data` type

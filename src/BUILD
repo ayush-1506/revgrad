@@ -4,7 +4,7 @@ cc_library(
     name = "sort",
     srcs = ["sort.cpp"],
     hdrs = ["sort.hpp", "data.hpp"],
-    visibility = ["//test:__pkg__"]
+    visibility = ["//test:__pkg__", "//examples:__pkg__"]
 )
 
 cc_library(
@@ -12,14 +12,5 @@ cc_library(
     srcs = ["data.cpp"],
     hdrs = ["data.hpp"],
     deps = [":sort"],
-    visibility = ["//test:__pkg__"]
-)
-
-cc_binary(
-    name = "main",
-    srcs = ["main.cpp"],
-    deps = [
-        ":data",
-        ":sort",
-    ],
+    visibility = ["//test:__pkg__", "//examples:__pkg__"]
 )

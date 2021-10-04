@@ -1,4 +1,4 @@
-#include "data.hpp"
+#include "src/data.hpp"
 
 int main(){
     value v1(5.0);
