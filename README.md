@@ -2,15 +2,15 @@
 
 ## revgrad : Reverse mode AD on DAGs
 
-revgrad is a minimal C++ library that provides reverse mode automatic differentiation on directed acyclic graphs. At the heart of it
+revgrad is a minimal C++ library that provides [reverse mode automatic differentiation](https://en.wikipedia.org/wiki/Automatic_differentiation#Reverse_accumulation) on directed acyclic graphs. At the heart of it
 is a `value` class that stores the `data`, `grad` and backward pass function.
 
 ### Example:
 
 Check out the random _computation graph_ in `examples/function.cpp`. 
 
-1. bazel build //examples:function
-2. bazel-bin/examples/function
+1. `bazel build //examples:function`
+2. `bazel-bin/examples/function`
 
 Output:
 
@@ -31,12 +31,18 @@ current loss 467.861
 ```
 :100: loss decreases
 
-### To do
+### To do (in order of priority)
 
+- Add definition for basic layers (relu, leaky-relu etc)
 - Tests
 - Add more advanced examples
 - Matrix
-- Higher order differentials
-- Python bindings (maybe)
 - GPU
 - Optimize
+- Higher order differentials
+- Python bindings (maybe)
+
+### Notes
+
+Writing CPP after a long time, which means there _might_ be places where the code could be optimized or made
+better.
