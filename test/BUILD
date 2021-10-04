@@ -1,7 +1,8 @@
 cc_test(
-  name = "sort-test",
+  name = "sort",
   size = "small",
-  srcs = ["test.cpp"],
+  srcs = ["sort.cpp"],
   deps = ["@com_google_googletest//:gtest_main",
+            "//src:sort",
             "//src:data"],
 )
