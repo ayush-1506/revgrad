@@ -50,14 +50,15 @@ bool operator< (const value &left, const value &right)
 
 
 // overload plus operator
-//value operator + (float other){
-//    return (*this) + value(other);
-//}
+value value::operator+(float other){
+    return (*this) + value(other);
+}
 
-//value operator + (int other) {
-//   float other_float = static_cast <float>(other);
-//    return (*this) + value(other_float);
-//}
+value value::operator+(int other) {
+   float other_float = static_cast <float>(other);
+    return (*this) + value(other_float);
+}
+
 value value::operator+(value other){
     float new_data = this->data + other.data;
     std::set<value> newchildren;
@@ -74,6 +75,16 @@ value value::operator+(value other){
 
     out.setbackward(newbackward);
     return out;
+}
+
+// overload plus operator
+value value::operator*(float other){
+    return (*this) * value(other);
+}
+
+value value::operator*(int other) {
+   float other_float = static_cast <float>(other);
+    return (*this) * value(other_float);
 }
 
 value value::operator*(value other){

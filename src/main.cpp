@@ -5,7 +5,7 @@ int main(){
     value v2(10.0);
     value v = v1 + v2;
     value v3(20.0);
-    value v5 = v*v3;
+    value v5 = v*6;
     //std::cout << v->data << std::endl;
     //std::cout << v->grad << std::endl;
 

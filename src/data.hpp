@@ -44,7 +44,15 @@ class value{
         //}
         value operator+(value);
 
+        value operator+(float);
+
+        value operator+(int);
+
         value operator*(value);
+
+        value operator*(float);
+
+        value operator*(int);
 
         friend bool operator< (const value &left, const value &right);
 
