@@ -1,18 +1,17 @@
-# revgrad
-Reverse mode AD on DAGs
+## revgrad : Reverse mode AD on DAGs
 
-# Usage
+revgrad provides reverse mode automatic differentiation on directed acyclic graphs. At the heart of it
+is a `value` class that stores the `data`, `grad` and backward pass function.
 
-1. bazel build //src:main
+### Usage
 
-# steps:
+1. bazel build //examples:main
+2. bazel-bin/examples/main
 
-[] Figure out design of single `Data` type
+### To do
 
-    struct data{
-        value
-        grad
-        backward function
-    }
-
-[] Add suport for basic add, sub, mul, div operators
+1. Add more advanced examples
+2. Higher order differentials
+3. Python bindings (maybe)
+4. GPU
+5. Optimize
