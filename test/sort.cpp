@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "src/sort.hpp"
-#include "src/data.hpp"
+#include "revgrad/sort.hpp"
+#include "revgrad/data.hpp"
 
 #include <vector>
 

@@ -2,7 +2,7 @@ cc_binary(
     name = "main",
     srcs = ["main.cpp"],
     deps = [
-        "//src:data",
-        "//src:sort",
+        "//revgrad:data",
+        "//revgrad:sort",
     ],
 )

@@ -1,4 +1,4 @@
-#include "src/data.hpp"
+#include "revgrad/data.hpp"
 
 int main(){
     value v1(5.0);
