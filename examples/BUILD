@@ -6,3 +6,11 @@ cc_binary(
         "//revgrad:sort",
     ],
 )
+
+cc_binary(
+    name = "function",
+    srcs = ["function.cpp"],
+    deps = [
+        "//revgrad:data",
+    ],
+)

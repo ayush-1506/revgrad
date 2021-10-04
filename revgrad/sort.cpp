@@ -2,22 +2,22 @@
 
 template <typename T>
 toposort<T>::toposort(){
-    std::cout << "instantiating toposort" << std::endl;
+    //std::cout << "instantiating toposort" << std::endl;
 };
 
 template <typename T>
 void toposort<T>::topological_sort(T curnode){
-    for (auto n: this->sorted_result){
-            std::cout << n.data << std::endl;
+    //for (auto n: this->sorted_result){
+    //    std::cout << n.data << std::endl;
+    //}
+    for (auto& child: curnode.children){
+        bool ispresent = this->visited.find(child) != this->visited.end();
+        if (!ispresent){
+            this->visited.insert(child);
+            this->topological_sort(child);
         }
-        for (auto& child: curnode.children){
-            bool ispresent = this->visited.find(child) != this->visited.end();
-            if (!ispresent){
-                this->visited.insert(child);
-                this->topological_sort(child);
-            }
-        }
-        this->sorted_result.push_back(curnode);
+    }
+    this->sorted_result.push_back(curnode);
 };
 
 template <typename T>

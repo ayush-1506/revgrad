@@ -68,16 +68,44 @@ value value::operator+(value other){
 
     std::function<void()> newbackward = [this, &out, other]() mutable {
         this->grad = this->grad + out.grad;
-        std::cout << "setting grad " << other.grad + out.grad << std::endl;
+        //std::cout << "setting grad " << other.grad + out.grad << std::endl;
         other.setgrad(other.grad+out.grad);
-        std::cout << "grad set" << std::endl;
+        //std::cout << "grad set" << std::endl;
     };
 
     out.setbackward(newbackward);
     return out;
 }
 
-// overload plus operator
+// overload sub operator
+value value::operator-(float other){
+    return (*this) + (value(other) * -1);
+}
+
+value value::operator-(int other) {
+   float other_float = static_cast <float>(other);
+    return (*this) + (value(other_float) * -1);
+}
+
+value value::operator-(value other){
+    float new_data = this->data - other.data;
+    std::set<value> newchildren;
+    newchildren.insert(*this);
+    newchildren.insert(other);
+    value out(new_data, newchildren);
+
+    std::function<void()> newbackward = [this, &out, other]() mutable {
+        this->grad = this->grad + out.grad;
+        //std::cout << "setting grad " << other.grad + out.grad << std::endl;
+        other.setgrad(other.grad+out.grad);
+        //std::cout << "grad set" << std::endl;
+    };
+
+    out.setbackward(newbackward);
+    return out;
+}
+
+// overload mul operator
 value value::operator*(float other){
     return (*this) * value(other);
 }
@@ -105,23 +133,27 @@ value value::operator*(value other){
 }
 
 void value::backward(){
-    std::cout << "goind back" << std::endl;
+    //std::cout << "goind back" << std::endl;
     std::set<value> visited;
 
     toposort<value>* topo = new toposort<value>();
-    topo -> printrandomstuff(100);
+    //topo -> printrandomstuff(100);
     //do topo sort here
     std::vector<value> topo_result = topo->get_topological_sort(*this);
     
-    std::cout << "topo sort result: " << std::endl;
-    for (auto n:topo_result){
-        std::cout << n.data << std::endl;
-    }
+    //std::cout << "topo sort result: " << std::endl;
+    //for (auto n:topo_result){
+    //    std::cout << n.data << std::endl;
+    //}
     this->grad = 1;
     for (auto& node: topo_result){
-        std::cout << "setting grad for " << node.data << std::endl;
+        //std::cout << "setting grad for " << node.data << std::endl;
         node.backwardfunc();
     }
+}
+
+void value::update(float lr){
+    this->data = this->data - lr*this->grad;
 }
 
 void value::show(){

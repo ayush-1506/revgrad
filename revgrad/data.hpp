@@ -48,6 +48,12 @@ class value{
 
         value operator+(int);
 
+        value operator-(value);
+
+        value operator-(float);
+
+        value operator-(int);
+
         value operator*(value);
 
         value operator*(float);
@@ -59,6 +65,8 @@ class value{
         void backward();
 
         void show();
+
+        void update(float);
 };
 
 #endif
