@@ -11,7 +11,8 @@ is a `value` class that stores the `data`, `grad` and backward pass function.
 ### To do
 
 1. Add more advanced examples
-2. Higher order differentials
-3. Python bindings (maybe)
-4. GPU
-5. Optimize
+2. Matrix
+3. Higher order differentials
+4. Python bindings (maybe)
+5. GPU
+6. Optimize
