@@ -3,70 +3,72 @@
 
 #include <iostream>
 
-#include <vector>
-#include <set>
-#include <functional>
 #include <algorithm>
+#include <functional>
+#include <set>
+#include <vector>
 
 #include "sort.hpp"
 
-class value{
-    public:
-        float data;
-        float grad;
-        std::function<void()> backwardfunc;
-        std::set<value> children;
+#include <eigen/Dense>
 
-        value(float);
+class value {
+public:
+  float data;
+  float grad;
+  std::function<void()> backwardfunc;
+  std::set<value> children;
 
-        value(float, std::set<value>);
+  value(float);
 
-        //getters
+  value(float, std::set<value>);
 
-        float getdata();
+  // getters
 
-        float getgrad();
+  float getdata();
 
-        //setters
+  float getgrad();
 
-        void setbackward(std::function<void()>);
+  // setters
 
-        void setgrad(float);
+  void setbackward(std::function<void()>);
 
-        // overload plus operator
-        //value operator + (float other){
-        //    return (*this) + value(other);
-        //}
+  void setgrad(float);
 
-        //value operator + (int other) {
-        //   float other_float = static_cast <float>(other);
-        //    return (*this) + value(other_float);
-        //}
-        value operator+(value);
+  // overload plus operator
+  // value operator + (float other){
+  //    return (*this) + value(other);
+  //}
 
-        value operator+(float);
+  // value operator + (int other) {
+  //    float other_float = static_cast <float>(other);
+  //     return (*this) + value(other_float);
+  // }
+  value operator+(value);
 
-        value operator+(int);
+  value operator+(float);
 
-        value operator-(value);
+  value operator+(int);
 
-        value operator-(float);
+  value operator-(value);
 
-        value operator-(int);
+  value operator-(float);
 
-        value operator*(value);
+  value operator-(int);
 
-        value operator*(float);
+  value operator*(value);
 
-        value operator*(int);
+  value operator*(float);
 
-        friend bool operator< (const value &left, const value &right);
+  value operator*(int);
 
-        void backward();
+  friend bool operator<(const value &left, const value &right);
 
-        void show();
+  void backward();
 
-        void update(float);
+  void show();
+
+  void update(float);
 };
 
 #endif
