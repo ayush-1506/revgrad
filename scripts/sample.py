@@ -20,7 +20,9 @@ class Tensor:
         return Tensor(self.val - other.val, [self, other], op="sub")
 
     
-    def backward(self):
+    def backward(self, head=True):
+        if head:
+            self.grad = 1
         if self.op == "add":
             self.children[0].grad += self.grad
             self.children[1].grad += self.grad
@@ -32,7 +34,7 @@ class Tensor:
             self.children[0].grad += self.grad
             self.children[1].grad -= self.grad
         for child in self.children:
-            child.backward()
+            child.backward(head=False)
         return self.grad
     
     def zero_grad(self):
@@ -48,7 +50,6 @@ c = a + b
 e = Tensor(4)
 
 d = c * e
-d.grad = 1
 
 d.backward()
 
@@ -56,7 +57,6 @@ print(a, b, e)
 
 for i in range(10):
     d.zero_grad()
-    d.grad = 1
     d.backward()
     #print(a, b, e)
     a.val -= a.grad * 0.01
