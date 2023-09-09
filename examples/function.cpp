@@ -13,8 +13,15 @@ int main(){
     value input6(8);
     value input7 = (input5 - input6)*(input5 - input6); // loss
 
+    std::vector<value*> ls = {&input1, &input2, &input3, &input4, &input5, &input6};
+
     for (int i=0; i<100; i++){
         input7.backward();
+
+        /**
+        for (auto &l: ls){
+            l->update(lr);
+        }*/
 
         // todo : make this better
         input1.update(lr);

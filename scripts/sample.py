@@ -19,7 +19,9 @@ class Tensor:
     def __sub__(self, other):
         return Tensor(self.val - other.val, [self, other], op="sub")
 
-    
+    def __truediv__(self, other):
+        return Tensor(self.val / other.val, [self, other], op="div")
+ 
     def backward(self, head=True):
         if head:
             self.grad = 1
@@ -33,6 +35,10 @@ class Tensor:
         if self.op == "sub":
             self.children[0].grad += self.grad
             self.children[1].grad -= self.grad
+        if self.op == "div":
+            a, b = self.children[0].val, self.children[1].val
+            self.children[0].grad += (1/b*self.grad)
+            self.children[1].grad += (-a/(b**2)*self.grad)
         for child in self.children:
             child.backward(head=False)
         return self.grad
@@ -41,7 +47,24 @@ class Tensor:
         self.grad = 0
         for child in self.children:
             child.zero_grad()
+    
+    def update(self, lr=0.01):
+        self.val -= self.grad * lr
+        for child in self.children:
+            child.update(lr=lr)
 
+    def forward(self):
+        if len(self.children) == 0:
+            return self.val
+        if self.op == "add":
+            return self.children[0].forward() + self.children[1].forward()
+        if self.op == "mul":
+            return self.children[0].forward() * self.children[1].forward()
+        if self.op == "sub":
+            return self.children[0].forward() - self.children[1].forward()
+        if self.op == "div":
+            return self.children[0].forward() / self.children[1].forward()
+        raise AssertionError("Invalid operation")
 
 a = Tensor(1)
 b = Tensor(2)
@@ -50,16 +73,14 @@ c = a + b
 e = Tensor(4)
 
 d = c * e
-
-d.backward()
-
-print(a, b, e)
+f = Tensor(5)
+g = d / f
 
 for i in range(10):
-    d.zero_grad()
-    d.backward()
+    g.zero_grad()
+    g.backward()
+    g.update()
     #print(a, b, e)
-    a.val -= a.grad * 0.01
-    b.val -= b.grad * 0.01
-    e.val -= e.grad * 0.01
-    print((a.val + b.val) * e.val)
+    print(g.forward())
+    print(f.val)
+#    print((a.val + b.val) * e.val)
